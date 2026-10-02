@@ -1,0 +1,20 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><title>選曲者クイズ</title><style>
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;margin:0;background:#f5f5f7;color:#111}main{max-width:620px;margin:auto;padding:24px 16px 60px}.card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 14px #0001}h1{font-size:25px;margin:0 0 8px}.sub{color:#666;margin-bottom:18px}input{box-sizing:border-box;width:100%;font-size:18px;padding:15px;border:1px solid #ccc;border-radius:14px}.result{padding:14px 4px;border-bottom:1px solid #eee}.title{font-size:18px;font-weight:700}.artist{font-size:14px;color:#666;margin-top:3px}#quiz{display:none;text-align:center}.song{font-size:25px;font-weight:800;margin-top:12px}.who{font-size:30px;font-weight:800;margin:22px 0}button{border:0;border-radius:14px;padding:15px 18px;font-size:18px;font-weight:700;width:100%;margin-top:14px}.primary{background:#111;color:#fff}.secondary{background:#e9e9ed;color:#111}#answer{display:none}.comment{background:#f2f2f7;border-radius:14px;padding:14px;margin-top:12px;text-align:left}.note{font-size:13px;color:#777;margin-top:20px}
+</style></head><body><main><div class="card" id="searchCard"><h1>🎵 選曲者クイズ</h1><div class="sub">曲名またはアーティスト名を入力</div><input id="q" type="search" placeholder="例：怪獣、米津、ONE OK ROCK" autocomplete="off"><div id="results"></div></div>
+<div class="card" id="quiz"><div class="sub">この曲で答え合わせ</div><div class="song" id="songTitle"></div><div class="artist" id="songArtist"></div><button class="primary" id="reveal">答えを見る</button><div id="answer"><div class="sub" style="margin-top:24px">正解</div><div class="who" id="person"></div><div class="comment" id="comment"></div></div><button class="secondary" id="back">次の曲を検索</button></div><div class="note">※運転者は操作せず、同乗者が使用してください。</div></main>
+<script>
+const songs=[
+{title:"怪獣",artist:"サカナクション",person:"Aさん",comment:""},
+{title:"IRIS OUT",artist:"米津玄師",person:"Bさん",comment:""},
+{title:"swim",artist:"04 Limited Sazabys",person:"Cさん",comment:""},
+{title:"O2",artist:"ORANGE RANGE",person:"ダミー",comment:"ダミー担当者からのコメントをここに入力"},
+{title:"Deeper Deeper",artist:"ONE OK ROCK",person:"ダミー",comment:""}
+];
+const q=document.querySelector("#q"),results=document.querySelector("#results"),searchCard=document.querySelector("#searchCard"),quiz=document.querySelector("#quiz");
+const norm=s=>s.toLowerCase().normalize("NFKC");
+const esc=s=>{const d=document.createElement("div");d.textContent=s;return d.innerHTML};
+q.addEventListener("input",()=>{const x=norm(q.value.trim());results.innerHTML="";if(!x)return;songs.filter(s=>norm(s.title+" "+s.artist).includes(x)).slice(0,30).forEach(s=>{const d=document.createElement("div");d.className="result";d.innerHTML=`<div class="title">${esc(s.title)}</div><div class="artist">${esc(s.artist)}</div>`;d.onclick=()=>selectSong(s);results.appendChild(d)});if(!results.children.length)results.innerHTML='<div class="result">該当する曲がありません</div>'});
+function selectSong(s){searchCard.style.display="none";quiz.style.display="block";songTitle.textContent=s.title;songArtist.textContent=s.artist;person.textContent=s.person;comment.textContent=s.comment;comment.style.display=s.comment?"block":"none";answer.style.display="none";reveal.style.display="block"}
+reveal.onclick=()=>{answer.style.display="block";reveal.style.display="none"};
+back.onclick=()=>{quiz.style.display="none";searchCard.style.display="block";q.value="";results.innerHTML="";q.focus()};
+</script></body></html>
